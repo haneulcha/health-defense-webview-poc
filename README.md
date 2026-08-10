@@ -7,6 +7,14 @@ React Native WebView에 얹는 것을 전제로 한 정통 타워디펜스 프�
 1. **성능** — 저사양 안드로이드 WebView에서 TD 규모가 60fps로 도는가
 2. **재미** — 디펜스를 해본 사람과 안 해본 사람 둘 다 몰입하는가
 
+## 배포된 빌드
+
+**https://haneulcha.github.io/health-defense-webview-poc/**
+
+성능 하네스는 같은 URL에 `?perf` 를 붙이면 됩니다.
+
+푸시하면 GitHub Actions가 타입체크와 테스트를 돌린 뒤 배포합니다 — 컴파일되지 않거나 테스트가 깨진 빌드가 테스터에게 넘어가지 않습니다.
+
 ## 실행
 
 ```bash
