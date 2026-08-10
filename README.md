@@ -87,8 +87,9 @@ npx vitest run src/core/balance-report.test.ts   # docs/balance-report.txt 갱�
 
 ## 현황
 
-- **M0** 렌더 경로·계측·웹뷰 처리 완료. 실기기 측정만 남음 (`docs/m0-measurements.md`)
+- **M0** 렌더 경로·계측·웹뷰 처리 완료 (`docs/m0-measurements.md`)
 - **M1** 코어 루프 완료 — 웨이브 10개, 배치·강화·판매, 승패, 재도전
-- **다음** Expo RN WebView 셸, 실기기 성능 측정, 5명 플레이 관찰
+- **M4** RN 셸 완료 — iOS/Android WebView 양쪽에서 렌더·브릿지 왕복 확인, 안드로이드에서 터치 배치까지 검증
+- **남은 것** 저사양 안드로이드 실기기 성능 측정, 5명 플레이 관찰
 
 적/타워 로스터는 임시안이다. 컨셉 고도화는 별도 트랙이고, 결과는 `src/content/` 교체로 반영된다.
