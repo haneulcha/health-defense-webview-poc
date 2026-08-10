@@ -27,8 +27,16 @@ export const GRID_ROWS = 13
 export const PLAYFIELD_W = TILE * GRID_COLS // 168
 export const PLAYFIELD_H = TILE * GRID_ROWS // 312
 
-/** Space reserved below the playfield for the DOM HUD (tower buttons, status). */
-export const MIN_HUD_CSS_PX = 96
+/**
+ * Space reserved below the playfield for the DOM HUD.
+ *
+ * Sized from what the HUD actually contains: a 44px tower button (the minimum
+ * comfortable touch target, which must not shrink), a ~24px status row, a ~15px
+ * message line, plus gaps and padding. 96 was the first guess and it clipped
+ * the tower buttons inside the RN WebView, whose viewport is shorter than the
+ * browser's because the native chrome takes a slice.
+ */
+export const MIN_HUD_CSS_PX = 116
 
 /**
  * How much playfield area we are willing to give up to get a whole-number

@@ -120,4 +120,19 @@ describe('playfield constants', () => {
     expect(PLAYFIELD_W).toBe(168)
     expect(PLAYFIELD_H).toBe(312)
   })
+
+  it('reserves enough HUD height for the controls it has to hold', () => {
+    // Derived from what the HUD contains, not guessed. The first value was 96
+    // and it clipped the tower buttons inside the RN WebView, where the
+    // viewport is shorter than in a browser. Unit tests cannot measure CSS, so
+    // the derivation lives here to fail loudly if someone trims it again.
+    const TOWER_BUTTON = 44 // minimum comfortable touch target
+    const STATUS_ROW = 24
+    const MESSAGE_ROW = 15
+    const GAPS_AND_PADDING = 20
+
+    expect(MIN_HUD_CSS_PX).toBeGreaterThanOrEqual(
+      TOWER_BUTTON + STATUS_ROW + MESSAGE_ROW + GAPS_AND_PADDING,
+    )
+  })
 })
