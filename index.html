@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <!--
+      viewport-fit=cover plus the safe-area padding below keeps the HUD clear of
+      the home indicator on iOS. user-scalable=no stops a double-tap during fast
+      tower placement from zooming the whole game.
+    -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0d1117" />
+    <!-- Inline so the build stays a single self-contained file, and so testers
+         never see a favicon 404 in the console during a play session. -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23e23d5a' d='M8 14 1.6 7.6a3.8 3.8 0 1 1 5.4-5.4L8 3.2l1-1a3.8 3.8 0 1 1 5.4 5.4z'/%3E%3C/svg%3E"
+    />
+    <title>건강 디펜스</title>
+    <style>
+      :root {
+        --hud-height: 160px;
+        --playfield-height: 60vh;
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #0d1117;
+        color: #e6edf3;
+        font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+        /* Kills the tap-highlight flash and long-press selection that make a
+           WebView feel like a web page instead of a game. */
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        user-select: none;
+        overscroll-behavior: none;
+        touch-action: manipulation;
+      }
+
+      #app {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .playfield {
+        position: relative;
+        height: var(--playfield-height);
+        flex: none;
+      }
+
+      .hud {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
+        background: #11161d;
+        border-top: 1px solid #222c38;
+        /* The dev harness packs more into this band than the game will. On a
+           short screen (iPhone SE reserves only the 96px minimum) it scrolls
+           rather than clipping the controls out of reach. */
+        overflow-y: auto;
+      }
+
+      /* ---- game HUD ---- */
+
+      .hud-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex: none;
+      }
+
+      .health-bar {
+        flex: 1;
+        min-width: 40px;
+        height: 8px;
+        border-radius: 4px;
+        background: #2a323c;
+        overflow: hidden;
+      }
+
+      .health-fill {
+        height: 100%;
+        width: 100%;
+        background: #3fb950;
+        /* Slow enough to notice a hit, fast enough not to lag the wave. */
+        transition: width 220ms ease-out, background-color 220ms ease-out;
+      }
+
+      .health-fill.low {
+        background: #f85149;
+      }
+
+      .health-text {
+        font-weight: 700;
+        min-width: 22px;
+        text-align: right;
+      }
+
+      .willpower {
+        color: #d2a8ff;
+        white-space: nowrap;
+      }
+
+      .wave-label {
+        color: #8b949e;
+        white-space: nowrap;
+      }
+
+      .hud-message {
+        flex: none;
+        color: #8b949e;
+        min-height: 15px;
+        font-size: 11px;
+      }
+
+      .tower-row,
+      .action-row {
+        display: flex;
+        gap: 6px;
+        flex: none;
+      }
+
+      .tower-row[hidden],
+      .action-row[hidden] {
+        display: none;
+      }
+
+      button {
+        font: inherit;
+        color: #e6edf3;
+        background: #21262d;
+        border: 1px solid #30363d;
+        border-radius: 6px;
+        padding: 6px 10px;
+        /* 44px is the comfortable minimum for a thumb; the tower buttons are
+           the most-tapped control in the game. */
+        min-height: 44px;
+        cursor: pointer;
+      }
+
+      button.compact {
+        min-height: 26px;
+        padding: 2px 8px;
+        font-size: 11px;
+      }
+
+      button.primary {
+        background: #238636;
+        border-color: #2ea043;
+      }
+
+      button.ghost {
+        background: transparent;
+        color: #8b949e;
+      }
+
+      button:disabled {
+        opacity: 0.4;
+      }
+
+      button[hidden] {
+        display: none;
+      }
+
+      .tower-button {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1px;
+        padding: 4px 2px;
+      }
+
+      .tower-button.selected {
+        border-color: #3fb950;
+        background: #17301f;
+      }
+
+      .tower-name {
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      .tower-cost {
+        font-size: 10px;
+        color: #d2a8ff;
+      }
+
+      .action-row {
+        align-items: center;
+      }
+
+      .action-label {
+        flex: 1;
+        font-size: 11px;
+        color: #8b949e;
+      }
+
+      .result {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 24px;
+        text-align: center;
+        background: rgba(13, 17, 23, 0.92);
+        z-index: 2;
+      }
+
+      .result[hidden] {
+        display: none;
+      }
+
+      .result-title {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .result-detail {
+        margin: 0;
+        color: #8b949e;
+        font-size: 12px;
+      }
+
+      /* ---- M0 perf harness HUD (?perf) ---- */
+
+      .hud-perf {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        /* Overlays the bottom of the playfield rather than fitting the HUD
+           band. A dev tool may cover part of the scene; hidden controls are
+           worse than a partly obscured board. */
+        max-height: 62vh;
+        z-index: 3;
+        background: rgba(17, 22, 29, 0.96);
+      }
+
+      .hud-stats {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2px 6px;
+      }
+
+      .hud-stat {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+      }
+
+      .hud-stat-label {
+        color: #7d8590;
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .hud-stat strong {
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .hud-histogram {
+        display: flex;
+        flex: none;
+        align-items: flex-end;
+        gap: 2px;
+        height: 20px;
+      }
+
+      .hud-bar {
+        flex: 1;
+        min-height: 2px;
+        background: #3fb950;
+        border-radius: 1px;
+      }
+
+      .hud-bar-over {
+        background: #d29922;
+      }
+
+      .hud-verdict {
+        color: #3fb950;
+        font-size: 11px;
+      }
+
+      .hud-verdict-bad {
+        color: #f85149;
+      }
+
+      .hud-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .hud-slider {
+        display: grid;
+        grid-template-columns: 78px 1fr;
+        align-items: center;
+        gap: 8px;
+        color: #8b949e;
+      }
+
+      .hud-slider input {
+        width: 100%;
+        height: 22px;
+        margin: 0;
+        accent-color: #3fb950;
+      }
+
+      .banner {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        text-align: center;
+        background: rgba(13, 17, 23, 0.88);
+        font-size: 14px;
+      }
+
+      .banner[hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

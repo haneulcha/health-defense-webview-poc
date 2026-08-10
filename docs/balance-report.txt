@@ -1,0 +1,27 @@
+# difficulty (hpScale multiplier) x strategy (towers built before upgrading)
+# wN-X means wave N cost X health
+# regenerate: npx vitest run src/core/balance-report.test.ts
+
+d=0.7 wide=12: won hp=100 towers=17 284s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10
+d=0.7 wide=16: won hp=100 towers=18 278s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10
+d=0.7 wide=20: won hp=100 towers=20 283s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10
+d=0.7 wide=28: won hp=100 towers=28 286s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10
+d=0.7 wide=40: won hp=100 towers=31 285s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10
+
+d=0.85 wide=12: won hp=100 towers=17 302s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10
+d=0.85 wide=16: won hp=100 towers=18 299s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10
+d=0.85 wide=20: won hp=100 towers=20 301s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10
+d=0.85 wide=28: won hp=85 towers=28 306s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10-15
+d=0.85 wide=40: won hp=85 towers=30 306s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10-15
+
+d=1 wide=12: won hp=60 towers=16 321s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10-40
+d=1 wide=16: won hp=75 towers=18 320s | w1 w2 w3 w4 w5 w6 w7 w8 w9 w10-25
+d=1 wide=20: won hp=50 towers=20 327s | w1 w2 w3 w4 w5 w6 w7 w8 w9-25 w10-25
+d=1 wide=28: won hp=25 towers=28 330s | w1 w2 w3 w4 w5 w6 w7 w8 w9-20 w10-55
+d=1 wide=40: won hp=25 towers=29 330s | w1 w2 w3 w4 w5 w6 w7 w8 w9-20 w10-55
+
+d=1.2 wide=12: lost hp=0 towers=15 344s | w1 w2 w3 w4 w5 w6-50 w7 w8 w9-35
+d=1.2 wide=16: lost hp=0 towers=16 352s | w1 w2 w3 w4 w5 w6-50 w7 w8 w9-35
+d=1.2 wide=20: lost hp=0 towers=20 302s | w1 w2 w3 w4 w5 w6-50 w7 w8
+d=1.2 wide=28: lost hp=0 towers=21 303s | w1 w2 w3 w4 w5 w6-50 w7 w8
+d=1.2 wide=40: lost hp=0 towers=21 303s | w1 w2 w3 w4 w5 w6-50 w7 w8
