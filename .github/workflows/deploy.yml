@@ -2,7 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [webview-defense-game-poc]
+    # Both branches: the PoC branch is what testers currently open, and main is
+    # where it lands on merge. Dropping either one silently stops deploying to
+    # the URL people are playing on.
+    branches: [main, webview-defense-game-poc]
   workflow_dispatch:
 
 permissions:
