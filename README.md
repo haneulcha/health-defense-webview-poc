@@ -27,6 +27,25 @@ npm run build        # RN WebView용 단일 HTML 파일 (dist/index.html)
 
 `npm run dev` 는 `--host` 로 뜨므로 같은 네트워크의 실기기에서 바로 열 수 있다.
 
+## React Native 셸 (`shell/`)
+
+실제로 얹힐 환경을 흉내내는 Expo 앱입니다. 브라우저가 답할 수 없는 질문 하나 — **WebView 안에서도 똑같이 동작하는가** — 를 위해 존재합니다.
+
+```bash
+cd shell
+npm install
+npm run ios        # 웹 빌드 → HTML 인라인 → 시뮬레이터
+npm run android
+```
+
+`npm run ios` 는 먼저 `scripts/sync-game-html.mjs` 를 돌려 웹을 빌드하고, `dist/index.html` 을 `shell/game-html.ts` 문자열로 넣습니다.
+
+**왜 에셋 파일이 아니라 문자열인가** — 에셋 로딩이 WebView 포팅에서 며칠을 잡아먹는 지점입니다. 안드로이드는 `file:///android_asset/...`, iOS는 다른 번들 경로로 해석하고, 파일 접근 플래그도 dev/release가 다릅니다. 문자열로 넘기면 이 문제군이 통째로 사라집니다. 그리고 이게 가능한 건 프로덕션 빌드가 **외부 참조가 하나도 없는 단일 HTML** 이기 때문입니다 — `vite-plugin-singlefile` 과 코드 생성 텍스처를 고른 이유가 여기서 회수됩니다. 동기화 스크립트는 외부 참조가 하나라도 있으면 빌드 타임에 실패합니다.
+
+셸 하단에는 브릿지 로그가 있습니다. 게임이 `ready` 를 보내면 셸이 `ping` 을 돌려주고 게임이 `pong` 하는 왕복 한 번이 화면에 찍힙니다 — 디버거 없이 기기에서 브릿지 동작을 눈으로 확인하려고요.
+
+빠른 반복이 필요하면 `shell/App.tsx` 의 `REMOTE_URL` 에 배포 URL이나 dev 서버 주소를 넣으면 됩니다.
+
 ## 구조
 
 ```

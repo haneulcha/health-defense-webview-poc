@@ -1,0 +1,25 @@
+{
+  "name": "shell",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "expo": "~57.0.12",
+    "expo-screen-orientation": "~57.0.1",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-webview": "13.16.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "sync": "node ../scripts/sync-game-html.mjs",
+    "start": "npm run sync && expo start",
+    "android": "npm run sync && expo start --android",
+    "ios": "npm run sync && expo start --ios",
+    "typecheck": "tsc --noEmit"
+  },
+  "private": true
+}

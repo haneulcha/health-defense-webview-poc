@@ -35,6 +35,14 @@ async function boot(): Promise<void> {
     onContextLost: () =>
       showBanner(banner, 'GPU 컨텍스트가 해제됐습니다 — 탭하여 다시 시작'),
   })
+  // Bridge round-trip, kept deliberately trivial. The PoC needs to know the
+  // channel works in both directions inside a real WebView; what travels over
+  // it is a product decision that has not been made yet.
+  platform.onHostMessage((message) => {
+    if (message.type === 'ping') {
+      platform.postToHost({ type: 'pong', receivedAt: performance.now() })
+    }
+  })
   platform.postToHost({ type: 'ready' })
 
   window.addEventListener('resize', () => stage.applyLayout())

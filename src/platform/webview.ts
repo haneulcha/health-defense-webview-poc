@@ -50,6 +50,39 @@ export class WebViewPlatform {
   }
 
   /**
+   * Subscribes to messages from the React Native host.
+   *
+   * Listens on both `window` and `document`: react-native-webview delivers
+   * host→web messages as a `message` event, and which target receives it has
+   * differed between platforms and library versions. Listening to both is the
+   * only way to get one code path that works on Android and iOS.
+   *
+   * @returns an unsubscribe function.
+   */
+  onHostMessage(handler: (message: WebViewHostMessage) => void): () => void {
+    const listener = (event: Event): void => {
+      const raw = (event as MessageEvent).data
+      if (typeof raw !== 'string') return
+      try {
+        const parsed = JSON.parse(raw) as WebViewHostMessage
+        if (parsed && typeof parsed.type === 'string') handler(parsed)
+      } catch {
+        // Not our message. Other libraries post to the same channel, so a
+        // parse failure is routine rather than an error worth surfacing.
+      }
+    }
+    window.addEventListener('message', listener)
+    document.addEventListener('message', listener)
+
+    const unsubscribe = (): void => {
+      window.removeEventListener('message', listener)
+      document.removeEventListener('message', listener)
+    }
+    this.disposers.push(unsubscribe)
+    return unsubscribe
+  }
+
+  /**
    * Sends a message to the React Native host.
    * A no-op in a plain browser, which is exactly what we want during dev.
    */

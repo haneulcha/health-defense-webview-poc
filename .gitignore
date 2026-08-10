@@ -3,5 +3,10 @@ dist/
 .playwright-mcp/
 *.local
 
-# Measurement screenshots are regenerated on demand, not source.
-*.png
+# Measurement screenshots, which land at the repo root. Scoped so it does not
+# also swallow the Expo shell's app icons.
+/*.png
+
+# Generated from dist/index.html by scripts/sync-game-html.mjs. Half a megabyte
+# of build output has no business in the history.
+shell/game-html.ts
