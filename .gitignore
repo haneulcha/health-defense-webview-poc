@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.playwright-mcp/
+*.local
+
+# Measurement screenshots are regenerated on demand, not source.
+*.png
