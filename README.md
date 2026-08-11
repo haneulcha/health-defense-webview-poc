@@ -90,6 +90,9 @@ npx vitest run src/core/balance-report.test.ts   # docs/balance-report.txt 갱�
 - **M0** 렌더 경로·계측·웹뷰 처리 완료 (`docs/m0-measurements.md`)
 - **M1** 코어 루프 완료 — 웨이브 10개, 배치·강화·판매, 승패, 재도전
 - **M4** RN 셸 완료 — iOS/Android WebView 양쪽에서 렌더·브릿지 왕복 확인, 안드로이드에서 터치 배치까지 검증
-- **남은 것** 저사양 안드로이드 실기기 성능 측정, 5명 플레이 관찰
+
+PoC가 답하려던 두 질문(저사양 안드로이드 성능 / 재미)은 **아직 둘 다 미해결**입니다. 답할 준비가 끝난 상태입니다.
+
+다음 작업과 완료 기준은 **[`docs/roadmap.md`](docs/roadmap.md)**, 코드를 만지기 전에 알아야 할 결정과 이유는 **[`AGENTS.md`](AGENTS.md)** 에 있습니다.
 
 적/타워 로스터는 임시안이다. 컨셉 고도화는 별도 트랙이고, 결과는 `src/content/` 교체로 반영된다.
