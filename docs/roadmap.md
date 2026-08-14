@@ -20,6 +20,9 @@ PoC가 답하려던 두 질문 중 **어느 쪽도 아직 답이 나오지 않�
 - 앱과 게임의 계약·게임 기획: [`game-design.md`](game-design.md) — 아래 3·4번의 상위 문서
 - 왜·누구에게·무엇을 느끼게: [`game-identity.md`](game-identity.md) — 위 문서보다 상류 (2026-08-14)
 - 좋은 게임인지 판정하는 법: [`fun-harness.md`](fun-harness.md) — 아래 1번의 프로토콜과 판정선
+- **무엇이 언제 왜 정해졌나: [`decisions.md`](decisions.md)** — 뒤집힌 결정 포함. `[결정]`을 바꾸면 여기 항목이 필요합니다
+- 제품팀에 보낼 것: [`product-questions.md`](product-questions.md) — 17번이 가장 중요합니다
+- 알아야 하는 것들: [`study-guide.md`](study-guide.md) — 영역별. 관찰 5명 전에 1·2번이 필요합니다
 
 ---
 

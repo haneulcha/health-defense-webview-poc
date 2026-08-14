@@ -9,6 +9,10 @@
 
 현재 진행 상황과 다음에 할 일은 [`docs/roadmap.md`](docs/roadmap.md).
 
+**게임이 무엇이 되려 하는가는 [`docs/game-identity.md`](docs/game-identity.md)** 에 있고, `docs/game-design.md`(앱 계약)보다 상류입니다. 권위 순서는 `윤리선 > 정체성 > 계약 > 구현`입니다.
+
+**결정을 바꾸면 [`docs/decisions.md`](docs/decisions.md)에 항목을 추가하십시오.** 추가 전용이고, 기존 항목은 고치지 않고 `→ D-NNN이 대체`만 답니다. 이 저장소에서는 결정이 실제로 여러 번 뒤집혔고, 그 이력이 보이지 않으면 같은 논쟁을 다시 합니다.
+
 ---
 
 ## 되돌리지 말 것
